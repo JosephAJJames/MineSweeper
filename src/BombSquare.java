@@ -12,26 +12,46 @@ public class BombSquare extends GameSquare
 		thisSquareHasBomb = (r.nextInt(MINE_PROBABILITY) == 0);
 	}
 
-	public void clicked() {
-		setImage("images/bomb.png");
-		boolean farLeft = false, farRight = false, veryTop = false, veryBottom = false;
-		if (xLocation == 1) { //square is on the far left of board
-			farLeft = true;
-		} else if (xLocation == board.getWidth()) { //square is far right of board
-			farRight = true;
-		} else if (yLocation == board.getHeight()) { //square if top of board
-			veryTop = true;
-		} else if (yLocation == 1) { //square if bottom of board
-			veryBottom = true;
+	public boolean getBomb() {
+		return this.thisSquareHasBomb;
+	}
+
+	public void squareChecker(int x, int y) {
+		int[] xs = {-1, 0, 1};
+		int[] xy = {-1, 0 ,1};
+		int count = 0;
+
+		for (int i = 0; i < 3; i++) {
+			for (int g = 0; g < 3; g++) {
+				if (board.getSquareAt(x + xs[i], y + xy[g]) != null) {
+
+					if ((board.getSquareAt(x + xs[i], y + xy[g]) instanceof BombSquare)) {
+						count++;
+					}
+				}
+			}
 		}
 
-		if (farLeft && !veryTop && !veryBottom) {
-			GameSquare square;
-			for (int x = 0; x < 3; x++) {
-				 square = board.getSquareAt(x, yLocation - 1);
-			}
-		} else if () {
+		if (count > 0) {
+			board.getSquareAt(x, y).setImage(("images/x.png").replace("x", Integer.toString(count)));
+		} else {
+			board.getSquareAt(x, y).setImage("images/blank.png");
+		}
+	}
 
+	public void clicked()
+	{
+		System.out.print(xLocation);
+		System.out.print(", " +  yLocation);
+		System.out.println("");
+		setImage("images/bomb.png");
+		int[] xs = {-1, 0, 1};
+		int[] xy = {-1, 0, 1};
+
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 3; y++) {
+				squareChecker(xLocation + xs[x], yLocation + xy[y]);
+			}
 		}
 	}
 }
